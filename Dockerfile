@@ -3,7 +3,7 @@
 # needed to build icetray
 ###############################################################
 
-FROM ubuntu:16.04
+FROM ubuntu:latest
 
 MAINTAINER Claudio Kopper <ckopper@icecube.wisc.edu>
 
