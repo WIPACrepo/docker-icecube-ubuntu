@@ -29,7 +29,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   python-virtualenv python-openssl python-pyasn1 python-coverage \
   python-flexmock libzmq5 libzmq3-dev libzmqpp-dev libzmqpp3 python-zmq \
   python-tornado python-tables python-fftw gnuplot python-gnuplot \
-  python-dev python-pip root-system \
+  python-dev python-pip root-system nano vim sudo \
   && apt-get clean
 
 # install AMD OpenCL
@@ -46,7 +46,11 @@ RUN /bin/bash amd_sdk.sh && \
     ln -sf /opt/AMDAPPSDK-3.0/lib/x86_64/sdk/libamdocl64.so /usr/lib/libamdocl64.so && \
     ln -sf /opt/AMDAPPSDK-3.0/bin/x86_64/clinfo /usr/bin/clinfo
 
+# allow passwordless sudo for users in the sudo group
+RUN echo "%sudo   ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/nopasswd_sudo
+
 # create an icecube user
-RUN groupadd icecube && useradd -g icecube -d /home/icecube --create-home icecube
+RUN groupadd icecube && useradd -g icecube -d /home/icecube --create-home icecube && adduser icecube sudo
+RUN touch /home/icecube/.sudo_as_admin_successful
 USER icecube
 WORKDIR /home/icecube
