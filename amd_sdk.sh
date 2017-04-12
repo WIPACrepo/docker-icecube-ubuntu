@@ -10,8 +10,9 @@ NONCE1_STRING='name="amd_developer_central_downloads_page_nonce"'
 FILE_STRING='name="f"'
 POSTID_STRING='name="post_id"'
 NONCE2_STRING='name="amd_developer_central_nonce"'
+USER_AGENT='Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:21.0) Gecko/20100101 Firefox/21.0'
 
-FORM=`wget -c -t 3 --waitretry=3 -qO - $URL | sed -n '/download-1/,/64-bit/p'`
+FORM=`wget -q -c -t 3 --waitretry=3 --user-agent="$USER_AGENT" -O - $URL | sed -n '/download-1/,/64-bit/p'`
 
 # Get nonce from form
 NONCE1=`echo $FORM | awk -F ${NONCE1_STRING} '{print $2}'`
@@ -28,10 +29,10 @@ FILE=`echo $FORM | awk -F ${FILE_STRING} '{print $2}'`
 FILE=`echo $FILE | awk -F'"' '{print $2}'`
 echo $FILE
 
-FORM=`wget -c -t 3 --waitretry=3 -qO - $URLDOWN --post-data "amd_developer_central_downloads_page_nonce=${NONCE1}&f=${FILE}&post_id=${POSTID}"`
+FORM=`wget -q -c -t 3 --waitretry=3 --user-agent="$USER_AGENT" -O - $URLDOWN --post-data "amd_developer_central_downloads_page_nonce=${NONCE1}&f=${FILE}&post_id=${POSTID}"`
 
 NONCE2=`echo $FORM | awk -F ${NONCE2_STRING} '{print $2}'`
 NONCE2=`echo $NONCE2 | awk -F'"' '{print $2}'`
 echo $NONCE2
 
-wget -q -c -t 3 --waitretry=3 --content-disposition --trust-server-names $URLDOWN --post-data "amd_developer_central_nonce=${NONCE2}&f=${FILE}" -O AMD-SDK.tar.bz2;
+wget -q -c -t 3 --waitretry=3 --trust-server-names $URLDOWN --post-data "amd_developer_central_nonce=${NONCE2}&f=${FILE}" --user-agent="$USER_AGENT" -O AMD-SDK.tar.bz2;

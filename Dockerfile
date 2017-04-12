@@ -3,7 +3,8 @@
 # needed to build icetray
 ###############################################################
 
-FROM ubuntu:16.04
+# FROM ubuntu:16.04
+FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 
 MAINTAINER Claudio Kopper <ckopper@icecube.wisc.edu>
 
@@ -29,7 +30,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   python-virtualenv python-openssl python-pyasn1 python-coverage \
   python-flexmock libzmq5 libzmq3-dev libzmqpp-dev libzmqpp3 python-zmq \
   python-tornado python-tables python-fftw gnuplot python-gnuplot \
-  python-dev python-pip root-system nano vim sudo \
+  python-dev python-pip root-system nano vim sudo man-db \
   && apt-get clean
 
 # install AMD OpenCL
