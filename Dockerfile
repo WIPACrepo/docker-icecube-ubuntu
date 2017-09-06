@@ -30,7 +30,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   python-virtualenv python-openssl python-pyasn1 python-coverage \
   python-flexmock libzmq5 libzmq3-dev libzmqpp-dev libzmqpp3 python-zmq \
   python-tornado python-tables python-fftw gnuplot python-gnuplot \
-  python-dev python-pip root-system nano vim sudo man-db \
+  python-dev python-pip root-system nano vim sudo man-db lsb-release \
   && apt-get clean
 
 # install AMD OpenCL
@@ -38,7 +38,7 @@ COPY amd_sdk.sh /root/
 RUN /bin/bash amd_sdk.sh && \
     tar -jx -f /root/AMD-SDK.tar.bz2 -C /root && \
     rm /root/AMD-SDK.tar.bz2 /root/amd_sdk.sh && \
-    /bin/sh /root/AMD-APP-SDK-v3.0.130.136-GA-linux32.sh -- --acceptEULA 'yes' -s && \
+    /bin/sh /root/AMD-APP-SDK-v3.0.130.136-GA-linux64.sh -- --acceptEULA 'yes' -s && \
     rm /root/AMD-APP-SDK-*.sh && rm -rf /root/AMDAPPSDK-* && \
     rm -rf /opt/AMDAPPSDK-*/samples/{aparapi,bolt,opencv} && \
     ln -sf /opt/AMDAPPSDK-3.0/include/CL /usr/include/ && \
