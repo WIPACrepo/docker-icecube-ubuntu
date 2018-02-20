@@ -4,7 +4,7 @@
 ###############################################################
 
 # FROM ubuntu:16.04
-FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
+FROM nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
 
 MAINTAINER Claudio Kopper <ckopper@icecube.wisc.edu>
 
@@ -35,9 +35,15 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 # install AMD OpenCL
 COPY amd_sdk.sh /root/
+COPY AMD-SDK.tar.bz2.sha256sum /root/
+# download OpenCL and check sha256sum
 RUN /bin/bash amd_sdk.sh && \
-    tar -jx -f /root/AMD-SDK.tar.bz2 -C /root && \
-    rm /root/AMD-SDK.tar.bz2 /root/amd_sdk.sh && \
+    /usr/bin/sha256sum -c /root/AMD-SDK.tar.bz2.sha256sum && \
+    rm /root/AMD-SDK.tar.bz2.sha256sum && \
+    rm /root/amd_sdk.sh
+# extract and install AMD APP SDK
+RUN tar -jx -f /root/AMD-SDK.tar.bz2 -C /root && \
+    rm /root/AMD-SDK.tar.bz2 && \
     /bin/sh /root/AMD-APP-SDK-v3.0.130.136-GA-linux64.sh -- --acceptEULA 'yes' -s && \
     rm /root/AMD-APP-SDK-*.sh && rm -rf /root/AMDAPPSDK-* && \
     rm -rf /opt/AMDAPPSDK-*/samples/{aparapi,bolt,opencv} && \
