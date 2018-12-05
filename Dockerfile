@@ -3,8 +3,7 @@
 # needed to build icetray
 ###############################################################
 
-# FROM ubuntu:16.04
-FROM nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
+FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
 
 MAINTAINER Claudio Kopper <ckopper@icecube.wisc.edu>
 
@@ -22,7 +21,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libcdk5-dev libarchive-dev python-scipy ipython-notebook \
   libqt4-dev python-urwid python-numpy python-matplotlib \
   libz-dev libqt4-opengl-dev libstarlink-pal-dev \
-  python-sphinx libopenblas-dev libcfitsio3-dev libsprng2-dev \
+  python-sphinx libopenblas-dev libsprng2-dev \
   libmysqlclient-dev libsuitesparse-dev \
   libcfitsio3-dev libmysqlclient-dev libhdf5-serial-dev \
   python-requests python-pyfits python-numexpr cython python-cffi \
@@ -34,13 +33,11 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   && apt-get clean
 
 # install AMD OpenCL
-COPY amd_sdk.sh /root/
 COPY AMD-SDK.tar.bz2.sha256sum /root/
 # download OpenCL and check sha256sum
-RUN /bin/bash amd_sdk.sh && \
+RUN wget -O AMD-SDK.tar.bz2 'https://github.com/Microsoft/LightGBM/releases/download/v2.0.12/AMD-APP-SDKInstaller-v3.0.130.136-GA-linux64.tar.bz2' && \
     /usr/bin/sha256sum -c /root/AMD-SDK.tar.bz2.sha256sum && \
-    rm /root/AMD-SDK.tar.bz2.sha256sum && \
-    rm /root/amd_sdk.sh
+    rm /root/AMD-SDK.tar.bz2.sha256sum
 # extract and install AMD APP SDK
 RUN tar -jx -f /root/AMD-SDK.tar.bz2 -C /root && \
     rm /root/AMD-SDK.tar.bz2 && \
